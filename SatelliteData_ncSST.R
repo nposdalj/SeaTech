@@ -9,39 +9,17 @@ library("rnaturalearth")
 library("rnaturalearthdata")
 
 #load files
-SST = nc_open("erdMH1sstdmdayR20190SQ_db9b_1c36_0a7f.nc")
+SST = nc_open("GofAK_SST_2019.nc")
 names(SST$var)
 v1=SST$var[[1]]
 SSTvar=ncvar_get(SST,v1)
 SST_lon=v1$dim[[1]]$vals
 SST_lat=v1$dim[[2]]$vals
-dates=as.POSIXlt(v1$dim[[3]]$vals,origin='1970-01-01',tz='GMT')
+dates=as.POSIXlt(v1$dim[[4]]$vals,origin='1970-01-01',tz='GMT')
 
 #loading the world
 world <- ne_countries(scale = "medium", returnclass = "sf")
 class(world)
-
-#setting color breaks
-h=hist(SSTvar[,,1],100,plot=FALSE)
-breaks=h$breaks
-n=length(breaks)-1
-jet.colors <-colorRampPalette(c("blue", "#007FFF", "cyan","#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-c=jet.colors(n)
-
-#plotting in base R
-layout(matrix(c(1,2,3,0,4,0), nrow=1, ncol=2), widths=c(5,1), heights=4) 
-layout.show(2) 
-par(mar=c(3,3,3,1))
-r = raster(t(SSTvar[,,1]),xmn = min(SST_lon),xmx = max(SST_lon),ymn=min(SST_lat),ymx=max(SST_lat))
-image(r,col=c,breaks=breaks,xlab='',ylab='',axes=TRUE,xlim = c(min(SST_lon),max(SST_lon)),xaxs='i',asp=0, main=paste("Monthly SST", dates[1]))
-points(-66.35, rep(41.06165),pch=20,cex=2)
-points(-76, rep(33.6699),pch=20,cex=2)
-#adding color scale
-par(mar=c(3,1,3,3))
-source('scale.R') 
-image.scale(sst[,,1], col=c, breaks=breaks, horiz=FALSE, yaxt="n",xlab='',ylab='',main='SST') 
-axis(4, las=1) 
-box()
 
 #plotting in ggplot
 r = raster(t(SSTvar[,,1]),xmn = min(SST_lon),xmx = max(SST_lon),ymn=min(SST_lat),ymx=max(SST_lat))
@@ -49,15 +27,15 @@ points = rasterToPoints(r, spatial = TRUE)
 df = data.frame(points)
 names(df)[names(df)=="layer"]="SST"
 mid = mean(df$SST)
-ggplot(data=world) +  geom_sf()+coord_sf(xlim= c(-81,-65),ylim=c(31,43),expand=FALSE)+
+ggplot(data=world) +  geom_sf()+coord_sf(xlim= c(-154,-140),ylim=c(55,61),expand=FALSE)+
   geom_raster(data = df , aes(x = x, y = y, fill = SST)) + 
-  ggtitle(paste("Monthly SST", dates[1]))+geom_point(x = -66.3, y = 41.1, color = "black",size=3)+
-  geom_point(x=-76, y=33.69, color = "red",size = 3)+xlab("Latitude")+ylab("Longitude")+
+  ggtitle(paste("Monthly SST", dates[1]))+geom_point(x = 211.97, y = 58.67, color = "black",size=3)+
+  xlab("Latitude")+ylab("Longitude")+
   scale_fill_gradient2(midpoint = mid, low="yellow", mid = "orange",high="red")
 
 #plotting time series HZ 
-I=which(SST_lon>=-66.6 & SST_lon<=-66.1) #change lon to SST_lon values to match ours, use max and min function
-J=which(SST_lat>=40.81165 & SST_lat<=41.31165) #change ""
+I=which(ChlA_lon>=-154.5 & ChlA_lon<=-142.2) #change lon to SST_lon values to match ours, use max and min function
+J=which(ChlA_lat>=54.8 & ChlA_lat<=61.3) #change ""
 sst2=SSTvar[I,J,]
 
 n=dim(sst2)[3] 

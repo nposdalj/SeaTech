@@ -1,14 +1,13 @@
 library(ncdf4)
 library(httr)
 library (naniar)
-library(ggmap)
 library("rnaturalearth")
 library("rnaturalearthdata")
 library(ggplot2)
 library(rgeos)
 
 #load files
-ChlA = nc_open("erdMH1chlamday_8b69_53f4_fca7.nc")
+ChlA = nc_open("GofAK_Chl_2019.nc") #name of .nc file for year of interest
 names(ChlA$var)
 v1=ChlA$var[[1]]
 ChlAvar=ncvar_get(ChlA,v1)
@@ -20,46 +19,24 @@ dates=as.POSIXlt(v1$dim[[3]]$vals,origin='1970-01-01',tz='GMT')
 world <- ne_countries(scale = "medium", returnclass = "sf")
 class(world)
 
-#plotting all values greater than 2, as 2
-ChlAvar[ChlAvar > 2] = 2
+#plotting all values greater than 5, as 5 so that a few anomalies here and there don't completely shift the color map
+ChlAvar[ChlAvar > 5] = 5
 
-#setting color breaks
-h=hist(ChlAvar[,,1],100,plot=FALSE)
-breaks=h$breaks
-n=length(breaks)-1
-jet.colors <-colorRampPalette(c("blue", "#007FFF", "cyan","#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-c=jet.colors(n)
-
-#creating maps in base R
-layout(matrix(c(1,2,3,0,4,0), nrow=1, ncol=2), widths=c(5,1), heights=4) 
-layout.show(2) 
-par(mar=c(3,3,3,1))
-r = raster(t(ChlAvar[,,1]),xmn = min(ChlA_lon),xmx = max(ChlA_lon),ymn=min(ChlA_lat),ymx=max(ChlA_lat))
-image(r,col=c,breaks=breaks,xlab='',ylab='',axes=TRUE,xaxs="i",yaxs="i",asp=-1, main=paste("Monthly ChlA", dates[1]))
-points(-66.35, rep(41.06165),pch=20,cex=1)
-points(-76, rep(33.6699),pch=20,cex=2)
-#adding color scale
-par(mar=c(3,1,3,3))
-source('scale.R') 
-image.scale(sst[,,1], col=c, breaks=breaks, horiz=FALSE, yaxt="n",xlab='',ylab='',main='Chl a') 
-axis(4, las=1) 
-box()
-
-#creating maps in ggplot
-r = raster(t(ChlAvar[,,1]),xmn = min(ChlA_lon),xmx = max(ChlA_lon),ymn=min(ChlA_lat),ymx=max(ChlA_lat))
+#creating maps in ggplot for the first month (if you'd like to plot subsequent months, change the value on lines 26 and 33)
+r = raster(t(ChlAvar[,,1]),xmn = min(ChlA_lon),xmx = max(ChlA_lon),ymn=min(ChlA_lat),ymx=max(ChlA_lat)) #change the value in brackets after ChlAvar
 points = rasterToPoints(r, spatial = TRUE)
 df = data.frame(points)
 names(df)[names(df)=="layer"]="Chla"
 mid = mean(df$Chla)
-ggplot(data=world) +  geom_sf()+coord_sf(xlim= c(-81,-65),ylim=c(31,43),expand=FALSE)+
+ggplot(data=world) +  geom_sf()+coord_sf(xlim= c(-154,-140),ylim=c(55,61),expand=FALSE)+
   geom_raster(data = df , aes(x = x, y = y, fill = Chla)) + 
-  ggtitle(paste("Monthly Chl A", dates[1]))+geom_point(x = -66.3, y = 41.1, color = "black",size=3)+
-  geom_point(x=-76, y=33.69, color = "red",size = 3)+xlab("Latitude")+ylab("Longitude")+
+  ggtitle(paste("Monthly Chl A", dates[1]))+geom_point(x = -148.03, y = 58.67, color = "black",size=3)+ #change the value in the brackets for dates
+  xlab("Latitude")+ylab("Longitude")+
   scale_fill_gradient2(midpoint = mid, low="blue", mid = "yellow",high="green")
 
-#plotting time series GS
-I=which(ChlA_lon>=-76.25 & ChlA_lon<=-75.75) #change lon to SST_lon values to match ours, use max and min function
-J=which(ChlA_lat>=33.41991667 & ChlA_lat<=33.91991667) #change ""
+#plotting time series CB
+I=which(ChlA_lon>=-154.5 & ChlA_lon<=-142.2) #change lon to SST_lon values to match ours, use max and min function
+J=which(ChlA_lat>=54.8 & ChlA_lat<=61.3) #change ""
 sst2=ChlAvar[I,J,] 
 
 n=dim(sst2)[3]
