@@ -7,6 +7,7 @@ library(rgeos)
 library(ggplot2)
 library("rnaturalearth")
 library("rnaturalearthdata")
+library(sp)
 
 #Set user directories
 setwd('C:/Users/nposd/Documents/GitHub/SeaTech')
@@ -28,13 +29,15 @@ class(world)
 
 #plotting in ggplot
 r = raster(t(SSTvar[,,1]),xmn = min(SST_lon),xmx = max(SST_lon),ymn=min(SST_lat),ymx=max(SST_lat))
-points = rasterToPoints(r, spatial = TRUE)
+rr = flip(r,direction = "y")
+points = rasterToPoints(rr, spatial = TRUE)
 df = data.frame(points)
 names(df)[names(df)=="layer"]="SST"
 mid = mean(df$SST)
+
 ggplot(data=world) +  geom_sf()+coord_sf(xlim= c(-154,-140),ylim=c(55,61),expand=FALSE)+
   geom_raster(data = df , aes(x = x, y = y, fill = SST)) + 
-  ggtitle(paste("Monthly SST", dates[1]))+geom_point(x = 211.97, y = 58.67, color = "black",size=3)+
+  ggtitle(paste("Monthly SST", dates[1]))+geom_point(x = -148.03, y = 58.67, color = "black",size=3)+
   xlab("Latitude")+ylab("Longitude")+
   scale_fill_gradient2(midpoint = mid, low="yellow", mid = "orange",high="red")
 
