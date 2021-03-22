@@ -5,9 +5,16 @@ library("rnaturalearth")
 library("rnaturalearthdata")
 library(ggplot2)
 library(rgeos)
+library(raster)
+library(dplyr)
+
+#Set user directories
+setwd('C:/Users/nposd/Documents/GitHub/SeaTech')
+saveDir = paste('C:/Users/nposd/Documents/GitHub/SeaTech/Environmental_TimeSeries')
+Year = 2014
 
 #load files
-ChlA = nc_open("GofAK_Chl_2019.nc") #name of .nc file for year of interest
+ChlA = nc_open(paste("GofAK_Chl_",Year,".nc",sep="")) #name of .nc file for year of interest
 names(ChlA$var)
 v1=ChlA$var[[1]]
 ChlAvar=ncvar_get(ChlA,v1)
@@ -23,8 +30,8 @@ class(world)
 ChlAvar[ChlAvar > 5] = 5
 
 #creating maps in ggplot for the first month (if you'd like to plot subsequent months, change the value on lines 26 and 33)
-r = raster(t(ChlAvar[,,1]),xmn = min(ChlA_lon),xmx = max(ChlA_lon),ymn=min(ChlA_lat),ymx=max(ChlA_lat)) #change the value in brackets after ChlAvar
-points = rasterToPoints(r, spatial = TRUE)
+r = raster(t(ChlAvar[,,2]),xmn = min(ChlA_lon),xmx = max(ChlA_lon),ymn=min(ChlA_lat),ymx=max(ChlA_lat)) #change the value in brackets after ChlAvar
+points = rasterToPoints(r, spatial = T)
 df = data.frame(points)
 names(df)[names(df)=="layer"]="Chla"
 mid = mean(df$Chla)
@@ -49,3 +56,11 @@ plot(1:n,res,axes=FALSE,type='o',pch=20,xlab='',ylab='Chla (mg m-3)')
 axis(2) 
 axis(1,1:n,format(dates,'%m')) 
 box()
+
+#export timeseries as .csv to plot in MATLAB
+TimeSeries = data.frame(format(dates,'%m'),res)
+TimeSeries %>%
+  rename(
+    Month = format.dates....m..,
+    ChlA = res)
+write.csv(TimeSeries,paste(saveDir,"/ChlA_",Year,".csv",sep =""))
