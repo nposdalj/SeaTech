@@ -10,9 +10,10 @@ library("rnaturalearthdata")
 library(sp)
 
 #Set user directories
-setwd('C:/Users/nposd/Documents/GitHub/SeaTech')
-saveDir = paste('C:/Users/nposd/Documents/GitHub/SeaTech/Environmental_TimeSeries')
-Year = 2019
+setwd('C:/Users/nposd/Documents/GitHub/SeaTech') #set working directory
+saveDir = paste('C:/Users/nposd/Documents/GitHub/SeaTech/Environmental_TimeSeries') #save directory for time series
+Year = 2019 #Year of interest
+Month = 1 #month of interest for plotting
 
 #load files
 SST = nc_open(paste("GofAK_SST_",Year,".nc",sep="")) #name of .nc file for year of interest
@@ -27,8 +28,8 @@ dates=as.POSIXlt(v1$dim[[3]]$vals,origin='1970-01-01',tz='GMT')
 world <- ne_countries(scale = "medium", returnclass = "sf")
 class(world)
 
-#plotting in ggplot
-r = raster(t(SSTvar[,,1]),xmn = min(SST_lon),xmx = max(SST_lon),ymn=min(SST_lat),ymx=max(SST_lat))
+#####plotting in ggplot######
+r = raster(t(SSTvar[,,Month]),xmn = min(SST_lon),xmx = max(SST_lon),ymn=min(SST_lat),ymx=max(SST_lat))
 rr = flip(r,direction = "y")
 points = rasterToPoints(rr, spatial = TRUE)
 df = data.frame(points)
@@ -37,7 +38,7 @@ mid = mean(df$SST)
 
 ggplot(data=world) +  geom_sf()+coord_sf(xlim= c(-154,-140),ylim=c(55,61),expand=FALSE)+
   geom_raster(data = df , aes(x = x, y = y, fill = SST)) + 
-  ggtitle(paste("Monthly SST", dates[1]))+geom_point(x = -148.03, y = 58.67, color = "black",size=3)+
+  ggtitle(paste("Monthly SST", dates[Month]))+geom_point(x = -148.03, y = 58.67, color = "black",size=3)+
   xlab("Latitude")+ylab("Longitude")+
   scale_fill_gradient2(midpoint = mid, low="yellow", mid = "orange",high="red")
 

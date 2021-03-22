@@ -9,9 +9,10 @@ library(raster)
 library(dplyr)
 
 #Set user directories
-setwd('C:/Users/nposd/Documents/GitHub/SeaTech')
-saveDir = paste('C:/Users/nposd/Documents/GitHub/SeaTech/Environmental_TimeSeries')
-Year = 2014
+setwd('C:/Users/nposd/Documents/GitHub/SeaTech') #set working directory
+saveDir = paste('C:/Users/nposd/Documents/GitHub/SeaTech/Environmental_TimeSeries') #save directory for time series
+Year = 2019 #Year of interest
+Month = 2 #month of interest for plotting
 
 #load files
 ChlA = nc_open(paste("GofAK_Chl_",Year,".nc",sep="")) #name of .nc file for year of interest
@@ -30,14 +31,14 @@ class(world)
 ChlAvar[ChlAvar > 5] = 5
 
 #creating maps in ggplot for the first month (if you'd like to plot subsequent months, change the value on lines 26 and 33)
-r = raster(t(ChlAvar[,,2]),xmn = min(ChlA_lon),xmx = max(ChlA_lon),ymn=min(ChlA_lat),ymx=max(ChlA_lat)) #change the value in brackets after ChlAvar
+r = raster(t(ChlAvar[,,Month]),xmn = min(ChlA_lon),xmx = max(ChlA_lon),ymn=min(ChlA_lat),ymx=max(ChlA_lat)) #change the value in brackets after ChlAvar
 points = rasterToPoints(r, spatial = T)
 df = data.frame(points)
 names(df)[names(df)=="layer"]="Chla"
 mid = mean(df$Chla)
 ggplot(data=world) +  geom_sf()+coord_sf(xlim= c(-154,-140),ylim=c(55,61),expand=FALSE)+
   geom_raster(data = df , aes(x = x, y = y, fill = Chla)) + 
-  ggtitle(paste("Monthly Chl A", dates[1]))+geom_point(x = -148.03, y = 58.67, color = "black",size=3)+ #change the value in the brackets for dates
+  ggtitle(paste("Monthly Chl A", dates[Month]))+geom_point(x = -148.03, y = 58.67, color = "black",size=3)+ #change the value in the brackets for dates
   xlab("Latitude")+ylab("Longitude")+
   scale_fill_gradient2(midpoint = mid, low="blue", mid = "yellow",high="green")
 
