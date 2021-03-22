@@ -1,6 +1,8 @@
 %%This script was written on 03112021 to extract click times from
 %%GofAK_CB10 and GofAK_KOA that match up with fishing vessel presence for
 %%SeaTech student Rio. NP
+
+%%This has to be run in Matlab 2020
 %% 
 clear all;close all;clc;
 %% Load necessary files
@@ -32,28 +34,28 @@ CB = CB(rows,:);
 
 %load ship times from excel
 ships = readtable('C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\GofAK_FishingVessels_SpermWhales.xlsx');
-% ships.Hear_Start = x2mdate(ships.Hear_Start,1);
-% ships.Hear_Start = datetime(ships.Hear_Start,'ConvertFrom','datenum');
-% ships.Hear_End = x2mdate(ships.Hear_End,1);
-% ships.Hear_End = datetime(ships.Hear_End,'ConvertFrom','datenum');
-% ships.See_Start = x2mdate(ships.See_Start,1);
-% ships.See_Start = datetime(ships.See_Start,'ConvertFrom','datenum');
-% ships.See_End = x2mdate(ships.See_End,1);
-% ships.See_End = datetime(ships.See_End,'ConvertFrom','datenum');
 
-%% Getting Encountere times
+%% Getting Encounter times
 
 %Encounter 1
 %Hear
 rangeOfTimes = timerange(ships.Hear_Start(1),ships.Hear_End(1));
 [tf,whichrows]=withinrange(CB,rangeOfTimes);
 Enc1_H = CB(whichrows,:);
+% Enc1_H.ICIRound = round(Enc1_H.ICI,-1);
+% figure
+% hist(Enc1_H.ICIRound);
+% mode(Enc1_H.ICIRound)
 writetimetable(Enc1_H,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter1_H.xlsx');
 
 %See
 rangeOfTimes = timerange(ships.See_Start(1),ships.See_End(1));
 [tf,whichrows]=withinrange(CB,rangeOfTimes);
 Enc1_S = CB(whichrows,:);
+Enc1_H.ICIRound = round(Enc1_H.ICI,-1);
+figure
+hist(Enc1_H.ICIRound);
+mode(Enc1_H.ICIRound)
 writetimetable(Enc1_S,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter1_S.xlsx');
 
 %Encounter 2
@@ -91,6 +93,11 @@ Enc5_H = KOA(whichrows,:);
 writetimetable(Enc5_H,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter5_H.xlsx');
 
 %Encounter 6
+%See
+rangeOfTimes = timerange(ships.See_Start(6),ships.See_End(6));
+[tf,whichrows]=withinrange(CB,rangeOfTimes);
+Enc6_S = CB(whichrows,:);
+writetimetable(Enc6_S,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter6_S.xlsx');
 
 %Encounter 9
 %Hear
