@@ -42,20 +42,12 @@ ships = readtable('C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\GofAK_Fis
 rangeOfTimes = timerange(ships.Hear_Start(1),ships.Hear_End(1));
 [tf,whichrows]=withinrange(CB,rangeOfTimes);
 Enc1_H = CB(whichrows,:);
-% Enc1_H.ICIRound = round(Enc1_H.ICI,-1);
-% figure
-% hist(Enc1_H.ICIRound);
-% mode(Enc1_H.ICIRound)
 writetimetable(Enc1_H,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter1_H.xlsx');
 
 %See
 rangeOfTimes = timerange(ships.See_Start(1),ships.See_End(1));
 [tf,whichrows]=withinrange(CB,rangeOfTimes);
 Enc1_S = CB(whichrows,:);
-Enc1_H.ICIRound = round(Enc1_H.ICI,-1);
-figure
-hist(Enc1_H.ICIRound);
-mode(Enc1_H.ICIRound)
 writetimetable(Enc1_S,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter1_S.xlsx');
 
 %Encounter 2
@@ -111,4 +103,38 @@ rangeOfTimes = timerange(ships.See_Start(9),ships.See_End(9));
 [tf,whichrows]=withinrange(KOA,rangeOfTimes);
 Enc9_S = KOA(whichrows,:);
 writetimetable(Enc9_S,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter9_S.xlsx');
+
+%% Non-Depradating Foraging Times
+
+%CB
+%week in April
+rangeOfTimes = timerange(datetime('20-Apr-2019 00:00:00'),datetime('29-Apr-2019 11:59:59'));
+[tf,whichrows] = withinrange(CB,rangeOfTimes);
+April = CB(whichrows,:);
+writetimetable(April,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\April_CB.xlsx');
+
+%week in August
+rangeOfTimes = timerange(datetime('14-Aug-2019 00:00:00'),datetime('23-Aug-2019 11:59:59'));
+[tf,whichrows] = withinrange(CB,rangeOfTimes);
+August = CB(whichrows,:);
+writetimetable(August,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\August_CB.xlsx');
+
+%KOA
+%week in July
+rangeOfTimes = timerange(datetime('12-Jul-2019 00:00:00'),datetime('18-Jul-2019 11:59:59'));
+[tf,whichrows] = withinrange(KOA,rangeOfTimes);
+July = KOA(whichrows,:);
+writetimetable(July,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\July_KOA.xlsx');
+
+%week in August
+rangeOfTimes = timerange(datetime('08-Jul-2019 00:00:00'),datetime('14-Jul-2019 11:59:59'));
+[tf,whichrows] = withinrange(KOA,rangeOfTimes);
+August = KOA(whichrows,:);
+writetimetable(August,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\August_KOA.xlsx');
+
+%week in September
+rangeOfTimes = timerange(datetime('06-Sep-2019 00:00:00'),datetime('12-Sep-2019 11:59:59'));
+[tf,whichrows] = withinrange(KOA,rangeOfTimes);
+September = KOA(whichrows,:);
+writetimetable(September,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\September_KOA.xlsx');
     
