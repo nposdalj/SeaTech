@@ -55,7 +55,13 @@ writetimetable(Enc1_S,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encou
 rangeOfTimes = timerange(ships.Hear_Start(2),ships.Hear_End(2));
 [tf,whichrows]=withinrange(KOA,rangeOfTimes);
 Enc2_H = KOA(whichrows,:);
-writetimetable(Enc2_H,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter2.xlsx');
+writetimetable(Enc2_H,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter2_H.xlsx');
+
+%See
+rangeOfTimes = timerange(ships.See_Start(2),ships.See_End(2));
+[tf,whichrows]=withinrange(KOA,rangeOfTimes);
+Enc2_S = KOA(whichrows,:);
+writetimetable(Enc2_S,'C:\Users\nposd\Documents\GitHub\SeaTech\SpermWhales\Encounter2_S.xlsx');
 
 %Encounter 3
 %Hear
