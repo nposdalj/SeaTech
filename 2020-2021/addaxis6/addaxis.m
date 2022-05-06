@@ -120,8 +120,8 @@ function addaxis(varargin)
   set(h_ax,'color',get(gcf,'color'));
   set(h_ax,'box','off');
   set(h_ax,'xtick',[]);
+  set(h_ax,'FontSize',20);
   set(hplt,'visible','off');
-
   set(h_ax,'ylim',yl2);
 
 
@@ -145,6 +145,7 @@ function addaxis(varargin)
   if length(hplts)==1
     set(h_ax,'ycolor',get(hplts,'color'));
   end
+  
  
   %  Now, compress main axis so the extra axes don't interfere
   %  or dissappear
@@ -177,5 +178,6 @@ function addaxis(varargin)
       set(axhand(indshift(I)+1),'position',[postot(indshift(I)+1,1)-axcompright*totwid, ...
 		    postot(indshift(I)+1,2:end)]);
     end
+    
  
   end
