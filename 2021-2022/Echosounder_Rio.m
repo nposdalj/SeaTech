@@ -201,7 +201,7 @@ GSprelim = [First;Second];
 GSprelim2 = [FirstCTR;SecondCTR];
 x5 = [GSprelim.NormCountBin,GSprelim2.NormCountBin];
 p5 = kruskalwallis(x5);
-xlabel('Site','FontSize',12)
+xlabel('Within GS','FontSize',12)
 ylabel('Normalized Daily Sperm Whale Presence','FontSize',12)
 title('Comparing Normalized Presence of Sperm Whales','FontSize',15)
 xticklabels({'Echosounder','No Echosounder'})
@@ -260,7 +260,7 @@ xlabel('Week')
 ylabel('Average Sperm Whale Presence (min)')
 hold on
 yyaxis right
-plot(masterTABLE_weekly.tbin,masterTABLE_weekly.EchoDuration,'.')
+plot(masterTABLE_weekly.tbin,masterTABLE_weekly.EchoDuration,'.r','MarkerSize',10)
 ylabel('Average Echosounder Duration (min)')
 title({'Weekly Sperm Whale and Echosounder Presence','at the Gulf Stream Site'})
 
